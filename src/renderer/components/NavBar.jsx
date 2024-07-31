@@ -8,6 +8,7 @@ const navbar = [
        
         subMenu: []
     },
+   
     {
         title: "Catégories",
         href: "/categories",
