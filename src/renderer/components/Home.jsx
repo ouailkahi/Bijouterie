@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router";
+import "../App.css";
+import Navbar from "./Navbar";
 import Header from "./Header";
-import SideBar from "./SideBar";
+import { Outlet } from "react-router";
 
 export default function Home() {
-  const [showMenu,setShowMenu] = useState(false);
-  const changeShowMenu = () => {
-    setShowMenu(!showMenu)
+  const [sidebarOut, setSidebarOut] = useState(false);
+
+  const handleSideBar = () =>{
+    setSidebarOut(!sidebarOut);
   }
+
   return (
     <React.Fragment>
-      <SideBar showMenu={showMenu} changeShowMenu={changeShowMenu}/>
-      <div className="ec-page-wrapper" onClick={() => {
-        if(showMenu){
-          changeShowMenu()
-        }
-      }}>
-        <Header changeShowMenu={changeShowMenu}/>
-        <Outlet />
+      <div className="wrapper">
+        <Navbar sidebarOut={sidebarOut} handleSideBar={handleSideBar}  />
+        <div className="ec-page-wrapper">
+          <Header sidebarOut={sidebarOut} handleSideBar={handleSideBar}/>
+          <Outlet/>
+        </div>
       </div>
     </React.Fragment>
   );

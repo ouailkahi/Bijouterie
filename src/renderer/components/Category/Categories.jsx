@@ -10,7 +10,7 @@ export default function Categories() {
       <div className="ec-content-wrapper">
         <div className="content">
           <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-            <h1 style={{color:"black"}}>Commandes</h1>
+            <h1 style={{color:"black"}}>Categorie</h1>
             <p className="breadcrumbs">
               <span>
                 

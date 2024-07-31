@@ -1,6 +1,5 @@
 import React from "react";
 
-
 function AddOrder() {
 
 
@@ -11,11 +10,8 @@ function AddOrder() {
           <div className="content">
             <div className="breadcrumb-wrapper d-flex align-items-center justify-content-between">
               <div>
-                <h1>Ajouter une nouvelle commande</h1>
                 <p className="breadcrumbs">
-                  <span>
-               
-                  </span>
+                
                   <span>
                     <i className="mdi mdi-chevron-right"></i>
                   </span>
@@ -85,7 +81,15 @@ function AddOrder() {
                       Nom du produit
                     </label>
                     <div className="col-12">
-                    
+                    <select
+                      id="parentCategory"
+                      name="parentCategory"
+                      className="form-control"
+                    >
+                      <option value={"null"}>Aucune</option>
+                      
+                           
+                    </select>
                     </div>
                    
                       <div
@@ -122,9 +126,9 @@ function AddOrder() {
                             >
                               <thead>
                                 <tr>
-                                  <th>Produit</th>
-                                  <th>Nom</th>
-                                  <th>Quantité</th>
+                                  <th>Type</th>
+                                  
+                                  <th>Poids</th>
                                   <th>Prix</th>
                                   <th>Variante</th>
                                   <th>Stock</th>
@@ -138,18 +142,9 @@ function AddOrder() {
                                
                                     <tr >
                                       <td>
-                                        <img
-                                          className="tbl-thumb"
-                                          style={{
-                                            width: "50px",
-                                            height: "50px",
-                                          }}
-                                        
-                                        />
+                                        Rodiage
                                       </td>
-                                      <td>
-                                        ok
-                                      </td>
+                                     
                                       <td style={{ width: "15%" }}>
                                         <input
                                           type="number"

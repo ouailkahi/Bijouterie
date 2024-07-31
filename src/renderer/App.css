@@ -10884,7 +10884,7 @@ textarea.form-control-lg {
   padding: 0 15px;
   border-radius: 0;
   border: 1px solid #eeeeee !important;
-  background-color: transparent;
+  background-color: rgb(231, 229, 229);
   color: #777;
   line-height: 3;
   border-radius: 15px;
@@ -21216,6 +21216,8 @@ div.copied {
   margin-right: auto;
   overflow: hidden;
   max-width: 130px;
+  font-size: 13px;
+  font-weight: bold;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

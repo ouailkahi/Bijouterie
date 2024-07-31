@@ -7,7 +7,7 @@ export default function AddCategory({ categories }) {
         <div className="ec-cat-list card card-default mb-24px">
           <div className="card-body" style={{ boxShadow: 'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px' }}>
             <div className="ec-cat-form" style={{ color: 'black' }}>
-              <h4>Ajouter une nouvelle Commande</h4>
+              <h4>Ajouter une nouvelle Categorie</h4>
 
               <form>
                 <div className="form-group row">
