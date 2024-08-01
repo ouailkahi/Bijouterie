@@ -1,237 +1,311 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTypesMetaux } from '../redux/typesMetauxSlice';
+import { createCommandes } from '../redux/commandeSlice';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 function AddOrder() {
+  const dispatch = useDispatch();
 
+  const typesMetaux = useSelector((state) => state.typesMetaux.items);
+  const typesMetauxStatus = useSelector((state) => state.typesMetaux.status);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typesMetauxStatus === 'idle') {
+      dispatch(fetchTypesMetaux());
+    }
+  }, [typesMetauxStatus, dispatch]);
+
+  const [commande, setCommande] = useState({
+    statut: 'confirmed',
+  });
+
+  const [form, formData] = useState([
+    {
+      typesMetaux: '',
+      prixArticle: 0,
+      poids: 0,
+      profitArticle: 0,
+      coutMeteaux: 0,
+      prixTotal: 0,
+    },
+  ]);
+
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...form];
+    list[index][name] = value;
+    formData(list);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (form.length === 0) {
+      return alert('Veuillez renseigner au moins un article');
+    }
+
+    if (form.find((form) => form.typesMetaux === '')) {
+      return alert('Veuillez renseigner tous les champs');
+    }
+
+    if (form.find((form) => form.prixArticle === 0)) {
+      return alert('Veuillez renseigner tous les champs');
+    }
+
+    if (form.find((form) => form.coutMeteaux === 0)) {
+      return alert('Veuillez renseigner tous les champs');
+    }
+
+    if (form.find((form) => form.poids === 0)) {
+      return alert('Veuillez renseigner tous les champs');
+    }
+
+    if(form.find((form) => form.prixArticle < form.coutMeteaux)){
+      return alert('Prix Article doit être supérieur au Cout Métaux');
+    }
+
+    const commandeData = {
+      ...commande,
+      prixTotal: form.reduce((acc, form) => acc + form.prixTotal, 0),
+      profitTotal : form.reduce((acc, form) => acc + form.profitArticle, 0)
+    };
+
+    dispatch(createCommandes(commandeData))
+      .then(async(res) => {
+        const commandeId = res.payload.id;
+        const data = form.map((value) => {
+          return {
+            ...value,
+            commandeId: commandeId,
+          };
+        })
+        
+        await axios.post('http://localhost:8080/articlesCommande/all', data)
+        .then((res) => {
+          alert('Commande crée avec succès')
+          navigate('/orders')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      })
+  };
 
   return (
     <>
       <React.Fragment>
         <div className="ec-content-wrapper">
           <div className="content">
-            <div className="breadcrumb-wrapper d-flex align-items-center justify-content-between">
-              <div>
-                <p className="breadcrumbs">
-                
-                  <span>
-                    <i className="mdi mdi-chevron-right"></i>
-                  </span>
-                  Ajouter une commande
-                </p>
-              </div>
+            <div className="ec-cat-form">
+              <form>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card card-default">
+                      <div className="card-body">
+                        <div className="table-responsive">
+                          <table
+                            id="responsive-data-table"
+                            className="table"
+                            style={{ width: '100%', textAlign: 'center' }}
+                          >
+                            <thead>
+                              <tr>
+                                <th>Type Meteaux</th>
+                                <th>Prix Article</th>
+                                <th>Cout Meteaux</th>
+                                <th>Poids</th>
+                                <th>Prix Total</th>
+                                <th>Profit Article</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
 
-            </div>
-            
-              <div className="ec-cat-form">
-                <form >
-                  <div className="form-row">
-                    <div className="form-group col-md-4 ">
-                      <label htmlFor="customer_name">
-                        Nom du client <span>(Facultatif)</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="customer_name"
-                        className="form-control "
-                      
-                      />
-                     
-                        <div
-                          className="invalid-feedback"
-                          style={{
-                            display: "block",
-                            marginBottom: "10px",
-                          }}
-                        >
-                   
-                        </div>
-                     
-                    </div>
-
-                    <div className="form-group col-md-4 ">
-                      <label htmlFor="phone_number">
-                        Numéro de téléphone <span>(Facultatif)</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="phone_number"
-                        className="form-control "
-                      
-                    
-                      />
-                     
-                        <div
-                          className="invalid-feedback"
-                          style={{
-                            display: "block",
-                            marginBottom: "10px",
-                          }}
-                        >
-                       
-                        </div>
-                     
-                    </div>
-
-                  </div>
-
-                  <div className="form-group row">
-                    <label
-                      htmlFor="productName"
-                      className="col-12 col-form-label"
-                    >
-                      Nom du produit
-                    </label>
-                    <div className="col-12">
-                    <select
-                      id="parentCategory"
-                      name="parentCategory"
-                      className="form-control"
-                    >
-                      <option value={"null"}>Aucune</option>
-                      
-                           
-                    </select>
-                    </div>
-                   
-                      <div
-                        className="invalid-feedback"
-                        style={{
-                          display: "block",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        
-                      </div>
-                   
-                    
-                      <div
-                        className="invalid-feedback"
-                        style={{
-                          display: "block",
-                          marginBottom: "10px",
-                        }}
-                      >
-                      </div>
-                  
-                  </div>
-
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="card card-default">
-                        <div className="card-body">
-                          <div className="table-responsive">
-                            <table
-                              id="responsive-data-table"
-                              className="table"
-                              style={{ width: "100%", textAlign: "center" }}
-                            >
-                              <thead>
-                                <tr>
-                                  <th>Type</th>
-                                  
-                                  <th>Poids</th>
-                                  <th>Prix</th>
-                                  <th>Variante</th>
-                                  <th>Stock</th>
-                                  <th>Coût total (Dh)</th>
-                                  <th>Action</th>
-                                </tr>
-
-                              </thead>
-
-                              <tbody>
-                               
-                                    <tr >
-                                      <td>
-                                        Rodiage
-                                      </td>
-                                     
-                                      <td style={{ width: "15%" }}>
-                                        <input
-                                          type="number"
-                                          className="form-control"
-                                          value=''
-                                         
-                                        />
-                                      </td>
-                                      <td style={{ width: "15%" }}>
-                                        <input
-                                          type="number"
-                                          className="form-control "
-                                          placeholder=''
-                                        />
-                                      </td>
-                                      <td>
-                                     
-                                          <select
-                                            className="form-control"
-                                           
+                            <tbody>
+                              {form.map((value, index) => (
+                                <tr key={index}>
+                                  <td>
+                                    <select
+                                      name="typesMetaux"
+                                      id="typesMetaux"
+                                      className="form-control"
+                                      onChange={(e) => handleChange(e, index)}
+                                    >
+                                      <option value="">Choisir un type</option>
+                                      {typesMetaux.length > 0 &&
+                                        typesMetaux.map((typesMetaux) => (
+                                          <option
+                                            key={typesMetaux.id}
+                                            value={typesMetaux.id}
                                           >
-                                            
-                                          </select>
-                                   
-                                      </td>
-                                      <td>
-                                      
-                                      </td>
-                                      <td>
-                                       
-                                      </td>
-                                      <td>
-                                        <div className="btn-group mb-1">
-                                          <button
-                                            type="button"
-                                            className="btn btn-outline-danger"
-                                           
-                                          >
-                                            Supprimer
-                                          </button>
-                                        </div>
-                                      </td>
-                                    </tr>
-                              
-
-                                <tr>
-                                  <td colSpan="6"></td>
-                                  <td className="text-right">
-                                    <strong>Total</strong>
+                                            {typesMetaux.nom}
+                                          </option>
+                                        ))}
+                                    </select>
                                   </td>
-                                  <td className="text-right">
-                                    <strong>
-                                       Dh
-                                    </strong>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      name="prixArticle"
+                                      id="prixArticle"
+                                      className="form-control"
+                                      value={value.prixArticle}
+                                      onChange={(e) => handleChange(e, index)}
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      name="coutMeteaux"
+                                      id="coutMeteaux"
+                                      className="form-control"
+                                      value={value.coutMeteaux}
+                                      onChange={(e) => {
+                                        handleChange(e, index);
+                                      }}
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      name="poids"
+                                      id="poids"
+                                      min={0}
+                                      className="form-control"
+                                      value={value.poids}
+                                      onChange={(e) => {
+                                        handleChange(e, index);
+                                        const list = [...form];
+                                        list[index]['profitArticle'] =
+                                          value.prixArticle * value.poids -
+                                          value.coutMeteaux * value.poids;
+                                        list[index]['prixTotal'] =
+                                          value.prixArticle * value.poids;
+                                        formData(list);
+                                      }}
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      name="prixTotal"
+                                      id="prixTotal"
+                                      className="form-control"
+                                      value={value.prixArticle * value.poids}
+                                      disabled
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      name="profitArticle"
+                                      id="profitArticle"
+                                      className="form-control"
+                                      style={{ color: value.profitArticle < 0 ? 'red' : 'green' }}
+                                      value={value.profitArticle}
+                                      disabled
+                                    />
+                                  </td>
+                                  <td>
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() => {
+                                        const list = [...form];
+                                        list.splice(index, 1);
+                                        formData(list);
+                                      }}
+                                    >
+                                      Supprimer
+                                    </button>
                                   </td>
                                 </tr>
-
-                               
-                              </tbody>
-                            </table>
-                          </div>
+                              ))}
+                              <tr>
+                                <td colSpan="5"></td>
+                                <td className="text-right">
+                                  <strong>Total</strong>
+                                </td>
+                                <td className="text-right">
+                                  <strong>
+                                    {form.reduce((a, b) => a + b.prixTotal, 0)}
+                                    Dh
+                                  </strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colSpan="5"></td>
+                                <td colSpan="2">
+                                  <select
+                                    name="statut"
+                                    id="statut"
+                                    value={commande.statut}
+                                    style={{color: commande.statut === 'confirmed' ? 'green' : 'orange'}}
+                                    onChange={(e) =>
+                                      setCommande({
+                                        ...commande,
+                                        statut: e.target.value,
+                                      })
+                                    }
+                                    className="form-control"
+                                  >
+                                    <option value="confirmed" style={{ color: 'green' }}>Confirmé</option>
+                                    <option value="pending" style={{ color: 'orange' }}>En cours</option>
+                                  </select>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div
-                    className="col-md-12"
-                    style={{
-                      display: "flex",
-                      justifyContent: "end",
-                      marginTop: "25px",
-                      gap: "15px",
-                    }}
+                <div
+                  className="col-md-12"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'end',
+                    marginTop: '25px',
+                    gap: '15px',
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={(e) =>
+                      formData([
+                        ...form,
+                        {
+                          typesMetaux: '',
+                          prixArticle: 0,
+                          coutMeteaux: 0,
+                          poids: 0,
+                          profitArticle: 0,
+                          prixTotal: 0,
+                        },
+                      ])
+                    }
                   >
-                    <button type="submit" className="btn btn-primary">
-                      Soumettre
-                    </button>
+                    Ajouter une article
+                  </button>
+                  <button type="submit" className="btn btn-primary" onClick={(e) => handleSubmit(e)}>
+                    Soumettre
+                  </button>
 
-                    <button type="cancel" className="btn btn-danger">
-                      Annuler
-                    </button>
-
-                  </div>
-                </form>
-              </div>
-        
+                  <button type="cancel" onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/orders');
+                  }} className="btn btn-danger">
+                    Annuler
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </React.Fragment>

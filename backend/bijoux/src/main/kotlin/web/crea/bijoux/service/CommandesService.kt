@@ -1,15 +1,20 @@
-package web.crea.bijoux.Service
+package web.crea.bijoux.service
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import web.crea.bijoux.Entity.Commandes
-import web.crea.bijoux.Repository.CommandesRepository
+import web.crea.bijoux.entity.ArticlesCommande
+import web.crea.bijoux.entity.Commandes
+import web.crea.bijoux.repository.ArticlesCommandeRepository
+import web.crea.bijoux.repository.CommandesRepository
 
 @Service
-class CommandesService(private val repository: CommandesRepository) {
+class CommandesService(private val repository: CommandesRepository, private val articlesCommandeRepository: ArticlesCommandeRepository) {
 
-    fun getAllCommandes(): Flux<Commandes> = repository.findAll()
+    fun getAllCommandes(): Flux<Commandes> = repository.findAllByOrderByDateCommandeDesc()
 
     fun getCommandesById(id: Long): Mono<Commandes> = repository.findById(id)
 
@@ -29,4 +34,28 @@ class CommandesService(private val repository: CommandesRepository) {
     }
 
     fun deleteCommandes(id: Long): Mono<Void> = repository.deleteById(id)
+
+    fun getAllCommandesWithPagination(page: Int, size: Int): Flux<Commandes> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        return repository.findAllBy(pageable)
+    }
+
+    fun getCommandeDetail(id: Long): Mono<Pair<Commandes, List<ArticlesCommande>>> {
+        // Fetch the Commandes entity by its ID
+        val commandesMono = repository.findById(id)
+            .switchIfEmpty(Mono.error(CommandesNotFoundException("Commandes with id $id not found")))
+
+        // Fetch the ArticlesCommande entities associated with the Commandes
+        val articlesCommandeMono = articlesCommandeRepository.findByCommandeId(id)
+            .collectList()
+
+        // Combine the results
+        return Mono.zip(commandesMono, articlesCommandeMono) { commandes, articlesCommandes ->
+            Pair(commandes, articlesCommandes)
+        }
+    }
 }
+
+class CommandesNotFoundException(message: String) : RuntimeException(message)
+
+

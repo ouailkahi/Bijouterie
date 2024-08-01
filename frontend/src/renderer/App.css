@@ -24961,3 +24961,27 @@ div.dataTables_wrapper div.dataTables_filter {
     justify-content: space-between;
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  padding: 10px 15px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.page-item.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-item:hover {
+  background-color: #e9ecef;
+}

@@ -1,8 +1,11 @@
-package web.crea.bijoux.Repository
+package web.crea.bijoux.repository
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
-import web.crea.bijoux.Entity.ArticlesCommande
+import reactor.core.publisher.Flux
+import web.crea.bijoux.entity.ArticlesCommande
 
 @Repository
-interface ArticlesCommandeRepository : ReactiveCrudRepository<ArticlesCommande, Long>
+interface ArticlesCommandeRepository : ReactiveCrudRepository<ArticlesCommande, Long>{
+    fun findByCommandeId(commandId:Long) : Flux<ArticlesCommande>
+}
