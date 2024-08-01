@@ -1,21 +1,21 @@
-package web.crea.bijoux.Service
+package web.crea.bijoux.service
 
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import web.crea.bijoux.Entity.TypesMetaux
-import web.crea.bijoux.Repository.TypesMetauxRepository
+import web.crea.bijoux.entity.TypeMetaux
+import web.crea.bijoux.repository.TypesMetauxRepository
 
 @Service
 class TypesMetauxService(private val repository: TypesMetauxRepository) {
 
-    fun getAllTypesMetaux(): Flux<TypesMetaux> = repository.findAll()
+    fun getAllTypesMetaux(): Flux<TypeMetaux> = repository.findAll()
 
-    fun getTypesMetauxById(id: Long): Mono<TypesMetaux> = repository.findById(id)
+    fun getTypesMetauxById(id: Long): Mono<TypeMetaux> = repository.findById(id)
 
-    fun createTypesMetaux(typesMetaux: TypesMetaux): Mono<TypesMetaux> = repository.save(typesMetaux)
+    fun createTypesMetaux(typesMetaux: TypeMetaux): Mono<TypeMetaux> = repository.save(typesMetaux)
 
-    fun updateTypesMetaux(id: Long, typesMetaux: TypesMetaux): Mono<TypesMetaux> {
+    fun updateTypesMetaux(id: Long, typesMetaux: TypeMetaux): Mono<TypeMetaux> {
         return repository.findById(id)
             .flatMap {
                 val updatedTypesMetaux = it.copy(nom = typesMetaux.nom)

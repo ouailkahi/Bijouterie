@@ -1,31 +1,43 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllCommandes } from "../redux/commandeSlice";
+import Pagination from "./Pagination"; // Import the custom Pagination component
+import { useNavigate } from "react-router";
 
 export default function AllOrders() {
+  const dispatch = useDispatch();
+  const { commandesList, status } = useSelector((state) => state.commandes);
+  const navigate = useNavigate();
 
-   
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize] = useState(10);
+
+  useEffect(() => {
+    if (status !== "succeeded-fetching") {
+      dispatch(fetchAllCommandes({ page: currentPage, size: pageSize }));
+    }
+  }, [currentPage, dispatch, status]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const convertToDate = (date) => {
+    const newDate = new Date(date);
+    return newDate.toUTCString();
+  };
+
+  const totalItems = commandesList.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
   return (
     <React.Fragment>
       <div className="ec-content-wrapper">
         <div className="content">
-          <div className="breadcrumb-wrapper d-flex align-items-center justify-content-between">
-            <div>
-              <h1>Commandes Mahal</h1>
-              <p className="breadcrumbs">
-                <span>
-                  
-                </span>
-                <span>
-                  <i className="mdi mdi-chevron-right"></i>
-                </span>
-                Commandes
-              </p>
-            </div>
-          </div>
           <div className="row">
             <div className="col-12">
               <div className="card card-default">
-                <div className="card-body " style={{ boxShadow: 'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px', borderRadius: '10px' }}>
+                <div className="card-body" style={{ boxShadow: 'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px', borderRadius: '10px' }}>
                   <div className="table-responsive">
                     <table
                       id="responsive-data-table"
@@ -35,41 +47,40 @@ export default function AllOrders() {
                       <thead>
                         <tr>
                           <th>ID</th>
-                          <th>Nom complet</th>
-                          <th>Date</th>
-                          <th>Statut</th>
-                          <th>Pertes</th>
-                          <th>Prix Damana</th>
-                          <th>Prix total</th>
+                          <th>Date Commande</th>
+                          <th>Prix Total</th>
+                          <th>Profit Total</th>
+                          <th>Status</th>
                           <th>Action</th>
                         </tr>
-
                       </thead>
-
                       <tbody>
-                       
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                        {commandesList.length > 0 && commandesList.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((commande) => (
+                          <tr key={commande.id}>
+                            <td>#00{commande.id}</td>
+                            <td>{convertToDate(commande.dateCommande)}</td>
+                            <td>{commande.prixTotal ? `${commande.prixTotal}Dh` : '0Dh'}</td>
+                            <td style={{ color: 'green' }}>{commande.profitTotal ? `${commande.profitTotal}Dh` : '0Dh'}</td>
+                            <td style={{ color: commande.statut === 'reject' ? 'red' : commande.statut === 'pending' ? 'orange' : 'green' }}>
+                              {commande.statut.toUpperCase()}
+                            </td>
+                            <td>
+                              <button type="button" className="btn btn-primary" onClick={() => {
+                                window.scrollTo(0, 0);
+                                navigate(`/orders/${commande.id}`)
+                                }}>
+                                Details
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignContent: "center",
-                        gap: "10px",
-                      }}
-                    >
-                    
-                    </div>
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
+                    />
                   </div>
                 </div>
               </div>

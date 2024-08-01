@@ -1,4 +1,4 @@
-package web.crea.bijoux.Entity
+package web.crea.bijoux.entity
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column

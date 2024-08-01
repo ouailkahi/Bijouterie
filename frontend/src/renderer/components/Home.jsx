@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "../App.css";
-import Navbar from "./Navbar";
 import Header from "./Header";
 import { Outlet } from "react-router";
+import NavBar from "./NavBar";
 
 export default function Home() {
   const [sidebarOut, setSidebarOut] = useState(false);
@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <React.Fragment>
       <div className="wrapper">
-        <Navbar sidebarOut={sidebarOut} handleSideBar={handleSideBar}  />
+        <NavBar sidebarOut={sidebarOut} handleSideBar={handleSideBar}  />
         <div className="ec-page-wrapper">
           <Header sidebarOut={sidebarOut} handleSideBar={handleSideBar}/>
           <Outlet/>
