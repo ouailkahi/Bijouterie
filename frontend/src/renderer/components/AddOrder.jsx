@@ -38,7 +38,13 @@ function AddOrder() {
     const { name, value } = e.target;
     const list = [...form];
     list[index][name] = value;
-    formData(list);
+    if (name == 'prixArticle' || name == 'coutMeteaux' || name == 'poids') {
+      list[index]['profitArticle'] = (list[index].prixArticle * list[index].poids) - (list[index].coutMeteaux * list[index].poids );
+      list[index]['prixTotal'] = list[index].prixArticle * list[index].poids;
+      formData(list);
+    }else {
+      formData(list);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -64,35 +70,39 @@ function AddOrder() {
       return alert('Veuillez renseigner tous les champs');
     }
 
-    if(form.find((form) => form.prixArticle < form.coutMeteaux)){
+    if (
+      form.find(
+        (form) => parseFloat(form.prixArticle) < parseFloat(form.coutMeteaux),
+      )
+    ) {
       return alert('Prix Article doit être supérieur au Cout Métaux');
     }
 
     const commandeData = {
       ...commande,
       prixTotal: form.reduce((acc, form) => acc + form.prixTotal, 0),
-      profitTotal : form.reduce((acc, form) => acc + form.profitArticle, 0)
+      profitTotal: form.reduce((acc, form) => acc + form.profitArticle, 0),
     };
 
-    dispatch(createCommandes(commandeData))
-      .then(async(res) => {
-        const commandeId = res.payload.id;
-        const data = form.map((value) => {
-          return {
-            ...value,
-            commandeId: commandeId,
-          };
-        })
-        
-        await axios.post('http://localhost:8080/articlesCommande/all', data)
+    dispatch(createCommandes(commandeData)).then(async (res) => {
+      const commandeId = res.payload.id;
+      const data = form.map((value) => {
+        return {
+          ...value,
+          commandeId: commandeId,
+        };
+      });
+
+      await axios
+        .post('http://localhost:8080/articlesCommande/all', data)
         .then((res) => {
-          alert('Commande crée avec succès')
-          navigate('/orders')
+          alert('Commande crée avec succès');
+          navigate('/orders');
         })
         .catch((err) => {
-          console.log(err)
-        })
-      })
+          console.log(err);
+        });
+    });
   };
 
   return (
@@ -117,7 +127,7 @@ function AddOrder() {
                                 <th>Type Meteaux</th>
                                 <th>Prix Article</th>
                                 <th>Cout Meteaux</th>
-                                <th>Poids</th>
+                                <th>Poids/g</th>
                                 <th>Prix Total</th>
                                 <th>Profit Article</th>
                                 <th>Action</th>
@@ -178,13 +188,6 @@ function AddOrder() {
                                       value={value.poids}
                                       onChange={(e) => {
                                         handleChange(e, index);
-                                        const list = [...form];
-                                        list[index]['profitArticle'] =
-                                          value.prixArticle * value.poids -
-                                          value.coutMeteaux * value.poids;
-                                        list[index]['prixTotal'] =
-                                          value.prixArticle * value.poids;
-                                        formData(list);
                                       }}
                                     />
                                   </td>
@@ -204,7 +207,12 @@ function AddOrder() {
                                       name="profitArticle"
                                       id="profitArticle"
                                       className="form-control"
-                                      style={{ color: value.profitArticle < 0 ? 'red' : 'green' }}
+                                      style={{
+                                        color:
+                                          value.profitArticle < 0
+                                            ? 'red'
+                                            : 'green',
+                                      }}
                                       value={value.profitArticle}
                                       disabled
                                     />
@@ -243,7 +251,12 @@ function AddOrder() {
                                     name="statut"
                                     id="statut"
                                     value={commande.statut}
-                                    style={{color: commande.statut === 'confirmed' ? 'green' : 'orange'}}
+                                    style={{
+                                      color:
+                                        commande.statut === 'confirmed'
+                                          ? 'green'
+                                          : 'orange',
+                                    }}
                                     onChange={(e) =>
                                       setCommande({
                                         ...commande,
@@ -252,8 +265,18 @@ function AddOrder() {
                                     }
                                     className="form-control"
                                   >
-                                    <option value="confirmed" style={{ color: 'green' }}>Confirmé</option>
-                                    <option value="pending" style={{ color: 'orange' }}>En cours</option>
+                                    <option
+                                      value="confirmed"
+                                      style={{ color: 'green' }}
+                                    >
+                                      Confirmé
+                                    </option>
+                                    <option
+                                      value="pending"
+                                      style={{ color: 'orange' }}
+                                    >
+                                      En cours
+                                    </option>
                                   </select>
                                 </td>
                               </tr>
@@ -293,14 +316,22 @@ function AddOrder() {
                   >
                     Ajouter une article
                   </button>
-                  <button type="submit" className="btn btn-primary" onClick={(e) => handleSubmit(e)}>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    onClick={(e) => handleSubmit(e)}
+                  >
                     Soumettre
                   </button>
 
-                  <button type="cancel" onClick={(e) => {
-                    e.preventDefault();
-                    navigate('/orders');
-                  }} className="btn btn-danger">
+                  <button
+                    type="cancel"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/orders');
+                    }}
+                    className="btn btn-danger"
+                  >
                     Annuler
                   </button>
                 </div>
