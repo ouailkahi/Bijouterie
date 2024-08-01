@@ -62,7 +62,7 @@ export default function GraphChart() {
         <div className="col-xl-8 col-md-12 p-b-15">
             <div id="user-acquisition" className="card card-default" style={{ boxShadow: 'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px', borderRadius: '10px' }}>
                 <div className="card-header">
-                    <h2>Rapport de ventes</h2>
+                    <h2>Rapport de ventes par jours</h2>
                 </div>
                 <div className="card-body" >
                     <div className="tab-content pt-4" id="salesReport">
