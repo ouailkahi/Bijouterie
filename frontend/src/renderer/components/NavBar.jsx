@@ -68,7 +68,7 @@ export default function NavBar({ sidebarOut, handleSideBar }) {
                             e.preventDefault();
                             toggleSidebar();
                         }}>
-                            <span className="ec-brand-name text-truncate" style={{ color: "BLACK", fontWeight: 'bold', fontFamily: 'serif' }}>Ktami</span>
+                            <span className="ec-brand-name text-truncate" style={{ color: "BLACK", fontWeight: 'bold', fontFamily: 'serif',fontSize:'25px' }}>BIJOUTERIE </span>
                         </Link>
                     </div>
                     <div className="ec-navigation" data-simplebar>
