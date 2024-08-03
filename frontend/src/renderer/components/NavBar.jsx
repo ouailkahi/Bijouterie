@@ -5,21 +5,22 @@ const navbar = [
     {
         title: "Tableau de bord",
         href: "/",
-       
+        icon: "mdi mdi-view-dashboard-outline",
+
         subMenu: []
     },
-   
+
     {
         title: "Catégories",
         href: "/categories",
-       
+        icon: "mdi mdi-bookmark",
         subMenu: []
     },
-   
+
     {
         title: "Commandes",
         href: null,
-       
+        icon: "mdi mdi-cart",
         subMenu: [
             {
                 title: "Commandes",
@@ -47,7 +48,7 @@ export default function NavBar({ sidebarOut, handleSideBar }) {
     const handleSectionClick = (index) => {
         setSubExpand(index === subExpand ? null : index);
     };
-    
+
     const toggleSidebar = () => {
         if (sidebarOut) {
             document.body.classList = 'ec-header-fixed ec-sidebar-fixed ec-sidebar-light ec-header-light sidebar-minified-out';
@@ -89,9 +90,9 @@ export default function NavBar({ sidebarOut, handleSideBar }) {
                                             }
                                         }}
                                     >
-                                        <i className={item.icon} style={{ color: "black" }}></i>
-                                        <span className="nav-text" style={{ color: "BLACK", fontWeight: 'bold' }}>{item.title}</span>
-                                      
+                                        <i className={item.icon} style={{ color: "black" }}></i>             
+                                                                   <span className="nav-text" style={{ color: "BLACK", fontWeight: 'bold' }}>{item.title}</span>
+
                                     </Link>
                                     {item.subMenu.length > 0 && (
                                         <div className={subExpand === index ? "collapse show" : "collapse"}>
