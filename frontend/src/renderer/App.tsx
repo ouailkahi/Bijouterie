@@ -1,7 +1,7 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home';
-
+import '@mdi/font/css/materialdesignicons.min.css';
 import AddOrder from './components/AddOrder';
 import Categories from './components/Category/Categories';
 import AllOrders from './components/AllOrders';
