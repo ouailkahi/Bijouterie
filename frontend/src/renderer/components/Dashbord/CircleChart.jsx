@@ -5,6 +5,26 @@ import { useState } from 'react';
 export default function CircleChart() {
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
+    const [data, setDataNew] = useState([]);
+
+
+    useEffect(() => {
+      const token = localStorage.getItem("accessToken");
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('http://localhost:8080/articlesCommande', {
+              headers: {
+                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+              }
+            });
+            setDataNew(response.data);
+            console.log([response.data.cash, response.data.aarbon,]);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        fetchData();
+      }, []);
 
 
   
@@ -46,7 +66,7 @@ export default function CircleChart() {
           chartInstance.current.destroy();
         }
       };
-    }, []);
+    }, [data]);
 
   return (
     <div className="col-xl-4 col-md-12 p-b-15">

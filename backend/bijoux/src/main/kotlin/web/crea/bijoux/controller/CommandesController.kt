@@ -3,6 +3,7 @@ package web.crea.bijoux.controller
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import web.crea.bijoux.dto.ProfitPerMonth
 import web.crea.bijoux.entity.ArticlesCommande
 import web.crea.bijoux.entity.Commandes
 import web.crea.bijoux.service.CommandesService
@@ -38,4 +39,9 @@ class CommandesController(private val service: CommandesService) {
 
     @DeleteMapping("/{id}")
     fun deleteCommandes(@PathVariable id: Long): Mono<Void> = service.deleteCommandes(id)
+
+    @GetMapping("/total/monthly")
+    fun getTotalProfitPerMonth(): Flux<ProfitPerMonth> {
+        return service.getTotalProfitPerMonth()
+    }
 }
