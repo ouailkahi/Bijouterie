@@ -1,12 +1,11 @@
 package web.crea.bijoux.dto
 
-import web.crea.bijoux.entity.Commandes
 import java.math.BigDecimal
+import java.time.LocalDate
 
-data class ProfitPerMonth(
-    val month: String,
+data class DailyProfitDTO(
+    val day: LocalDate,
     val totalProfit: BigDecimal,
     val totalPrix: BigDecimal,
-    val totalPoids: BigDecimal,
-
+    val totalPoids: BigDecimal
 )

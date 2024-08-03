@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import web.crea.bijoux.dto.DailyProfitDTO
 import web.crea.bijoux.dto.ProfitPerMonth
 import web.crea.bijoux.entity.ArticlesCommande
 import web.crea.bijoux.entity.Commandes
@@ -59,6 +60,11 @@ class CommandesService(private val repository: CommandesRepository, private val 
     fun getTotalProfitPerMonth(): Flux<ProfitPerMonth> {
         return repository.findTotalProfitPerMonth()
     }
+
+    fun getTotalProfitPerDay(): Flux<DailyProfitDTO> {
+        return repository.findTotalProfitPerDay()
+    }
+
 
 }
 

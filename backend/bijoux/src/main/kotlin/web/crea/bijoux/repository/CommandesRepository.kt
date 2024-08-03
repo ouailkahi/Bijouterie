@@ -5,6 +5,7 @@ import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
+import web.crea.bijoux.dto.DailyProfitDTO
 import web.crea.bijoux.dto.ProfitPerMonth
 import web.crea.bijoux.entity.Commandes
 
@@ -18,4 +19,7 @@ interface CommandesRepository : ReactiveCrudRepository<Commandes, Long>{
 
     @Query("SELECT * FROM get_total_profit_per_month()")
     fun findTotalProfitPerMonth(): Flux<ProfitPerMonth>
+
+    @Query("SELECT * FROM get_total_profit_per_day()")
+    fun findTotalProfitPerDay(): Flux<DailyProfitDTO>
 }

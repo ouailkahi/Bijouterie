@@ -3,6 +3,7 @@ package web.crea.bijoux.controller
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import web.crea.bijoux.dto.DailyProfitDTO
 import web.crea.bijoux.dto.ProfitPerMonth
 import web.crea.bijoux.entity.ArticlesCommande
 import web.crea.bijoux.entity.Commandes
@@ -43,5 +44,10 @@ class CommandesController(private val service: CommandesService) {
     @GetMapping("/total/monthly")
     fun getTotalProfitPerMonth(): Flux<ProfitPerMonth> {
         return service.getTotalProfitPerMonth()
+    }
+
+    @GetMapping("/total/daily")
+    fun getTotalProfitPerDay(): Flux<DailyProfitDTO> {
+        return service.getTotalProfitPerDay()
     }
 }
