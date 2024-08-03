@@ -4,6 +4,7 @@ import { deleteTypesMetaux } from '../../redux/typesMetauxSlice';
 
 export default function CategoriesTable({ typesMetaux }) {
   const dispatch = useDispatch();
+  
   return (
     <React.Fragment>
       <div className="col-xl-8 col-lg-12">
@@ -23,34 +24,34 @@ export default function CategoriesTable({ typesMetaux }) {
               >
                 <thead>
                   <tr>
-                    <th>Id</th>
-                    <th>Type meteaux</th>
-                    <th>Action</th>
+                    <th>ID</th>
+                    <th>Tipo de Metales</th>
+                    <th>Acción</th>
                   </tr>
                 </thead>
                 <tbody>
                   {typesMetaux.length > 0 &&
-                    typesMetaux.map((typesMetaux) => (
-                      <tr key={typesMetaux.id}>
-                        <td>{typesMetaux.id}</td>
-                        <td>{typesMetaux.nom}</td>
+                    typesMetaux.map((type) => (
+                      <tr key={type.id}>
+                        <td>{type.id}</td>
+                        <td>{type.nom}</td>
                         <td>
-                            <a
-                              className='btn btn-danger'
-                              style={{ cursor: 'pointer' }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (
-                                  window.confirm(
-                                    'Voulez-vous supprimer ce type?',
-                                  )
-                                ) {
-                                  dispatch(deleteTypesMetaux(typesMetaux.id));
-                                }
-                              }}
-                            >
-                              Supprimer
-                            </a>
+                          <a
+                            className='btn btn-danger'
+                            style={{ cursor: 'pointer' }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (
+                                window.confirm(
+                                  '¿Desea eliminar este tipo?',
+                                )
+                              ) {
+                                dispatch(deleteTypesMetaux(type.id));
+                              }
+                            }}
+                          >
+                            Eliminar
+                          </a>
                         </td>
                       </tr>
                     ))}

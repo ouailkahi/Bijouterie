@@ -3,16 +3,6 @@ CREATE TABLE TypesMetaux (
     nom VARCHAR(255) NOT NULL
 );
 
-INSERT INTO TypesMetaux (nom) VALUES
-('Or'),
-('Argent'),
-('Platine'),
-('Palladium'),
-('Rhodium'),
-('Nickel');
-
-select * from TypesMetaux
-
 CREATE TABLE Commandes (
     id SERIAL PRIMARY KEY,
     date_commande TIMESTAMP NOT NULL,
@@ -21,16 +11,6 @@ CREATE TABLE Commandes (
     profit_total DECIMAL(10, 2)
 );
 
-INSERT INTO Commandes (date_commande) VALUES
-('2024-01-01 10:00:00'),
-('2024-01-02 11:00:00'),
-('2024-01-03 12:00:00'),
-('2024-01-04 13:00:00'),
-('2024-01-05 14:00:00'),
-('2024-01-06 15:00:00');
-
-
-select * from Commandes;
 
 CREATE TABLE ArticlesCommande (
     id SERIAL PRIMARY KEY,
@@ -38,29 +18,26 @@ CREATE TABLE ArticlesCommande (
 	types_metaux bigint not null references  TypesMetaux(id),
     prix_article DECIMAL(10, 2) Not NULL ,
     profit_article DECIMAL(10, 2) Not NULL,
-	poids DECIMAL(10,2) Not NULL 
+	poids DECIMAL(10,2) Not NULL
 );
 
 
-INSERT INTO ArticlesCommande (commande_id, types_metaux, prix_article, profit_article, poids) VALUES
-(7, 1, 100.00, 20.00, 5.00), -- Commande 1, Or
-(7, 2, 150.00, 30.00, 7.50), -- Commande 1, Argent
-(8, 3, 200.00, 40.00, 10.00), -- Commande 2, Platine
-(8, 4, 250.00, 50.00, 12.50), -- Commande 2, Palladium
-(9, 5, 300.00, 60.00, 15.00), -- Commande 3, Rhodium
-(9, 6, 120.00, 24.00, 6.00);  -- Commande 3, Nickel
-
-
 CREATE OR REPLACE FUNCTION get_total_profit_per_month()
-RETURNS TABLE (month TEXT, total_profit DECIMAL) AS
+RETURNS TABLE (month TEXT, total_profit DECIMAL,total_prix DECIMAL, total_poids DECIMAL) AS
 $$
 BEGIN
     RETURN QUERY
-    SELECT
+   SELECT
         TO_CHAR(date_commande, 'YYYY-MM') AS month,
-        SUM(profit_total) AS total_profit
+        SUM(profit_total) AS total_profit,
+        SUM(prix_total) AS total_prix,
+        SUM(poids) AS total_poids
     FROM
         Commandes
+    JOIN
+        ArticlesCommande ON ArticlesCommande.commande_id = Commandes.id
+    WHERE
+        date_trunc('month', date_commande) = date_trunc('month', CURRENT_DATE)
     GROUP BY
         TO_CHAR(date_commande, 'YYYY-MM')
     ORDER BY
@@ -68,7 +45,87 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-select * from get_total_profit_per_month();
+
+
+CREATE OR REPLACE FUNCTION get_total_profit_per_months()
+RETURNS TABLE (month TEXT, total_profit DECIMAL,total_prix DECIMAL, total_poids DECIMAL) AS
+$$
+BEGIN
+    RETURN QUERY
+   SELECT
+        TO_CHAR(date_commande, 'YYYY-MM') AS month,
+        SUM(profit_total) AS total_profit,
+        SUM(prix_total) AS total_prix,
+        SUM(poids) AS total_poids
+    FROM
+        Commandes
+    JOIN
+        ArticlesCommande ON ArticlesCommande.commande_id = Commandes.id
+    GROUP BY
+        TO_CHAR(date_commande, 'YYYY-MM')
+    ORDER BY
+        month;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_total_profit_per_day()
+RETURNS TABLE (
+    day DATE,
+    total_profit DECIMAL,
+    total_prix DECIMAL,
+    total_poids DECIMAL
+) AS
+$$
+BEGIN
+    RETURN QUERY
+    SELECT
+        DATE(date_commande) AS day,  -- Extracts the date part from the timestamp
+        SUM(profit_total) AS total_profit,
+        SUM(prix_total) AS total_prix,
+        SUM(poids) AS total_poids
+    FROM
+        Commandes
+    JOIN
+        ArticlesCommande ON ArticlesCommande.commande_id = Commandes.id
+    WHERE
+        DATE(date_commande) = CURRENT_DATE
+    GROUP BY
+        DATE(date_commande)
+    ORDER BY
+        day;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_total_profit_per_days()
+RETURNS TABLE (
+    day DATE,
+    total_profit DECIMAL,
+    total_prix DECIMAL,
+    total_poids DECIMAL
+) AS
+$$
+BEGIN
+    RETURN QUERY
+    SELECT
+        DATE(date_commande) AS day,  -- Extracts the date part from the timestamp
+        SUM(profit_total) AS total_profit,
+        SUM(prix_total) AS total_prix,
+        SUM(poids) AS total_poids
+    FROM
+        Commandes
+    JOIN
+        ArticlesCommande ON ArticlesCommande.commande_id = Commandes.id
+    GROUP BY
+        DATE(date_commande)
+    ORDER BY
+        day;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION update_commande()
 RETURNS TRIGGER AS
@@ -96,4 +153,24 @@ CREATE TRIGGER articles_commande_trigger
 AFTER INSERT OR UPDATE ON ArticlesCommande
 FOR EACH ROW
 EXECUTE FUNCTION update_commande();
+
+
+
+
+CREATE OR REPLACE FUNCTION get_total_weight_per_metal()
+RETURNS TABLE (type_metal varchar(255), total_poids DECIMAL) AS
+$$
+BEGIN
+    RETURN QUERY
+    SELECT
+        tm.nom AS type_metal,
+        COALESCE(SUM(ac.poids), 0) AS total_poids
+    FROM
+        ArticlesCommande ac
+    JOIN
+        TypesMetaux tm ON ac.types_metaux = tm.id
+    GROUP BY
+        tm.nom;
+END;
+$$ LANGUAGE plpgsql;
 

@@ -22,4 +22,10 @@ interface CommandesRepository : ReactiveCrudRepository<Commandes, Long>{
 
     @Query("SELECT * FROM get_total_profit_per_day()")
     fun findTotalProfitPerDay(): Flux<DailyProfitDTO>
+
+    @Query("SELECT * FROM get_total_profit_per_days()")
+    fun findTotalProfitPerDays(): Flux<DailyProfitDTO>
+
+    @Query("SELECT * FROM get_total_profit_per_months()")
+    fun findTotalProfitPerMonths(): Flux<ProfitPerMonth>
 }

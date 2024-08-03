@@ -38,11 +38,11 @@ function AddOrder() {
     const { name, value } = e.target;
     const list = [...form];
     list[index][name] = value;
-    if (name == 'prixArticle' || name == 'coutMeteaux' || name == 'poids') {
-      list[index]['profitArticle'] = (list[index].prixArticle * list[index].poids) - (list[index].coutMeteaux * list[index].poids );
-      list[index]['prixTotal'] = list[index].prixArticle * list[index].poids;
+    if (name === 'prixArticle' || name === 'coutMeteaux' || name === 'poids') {
+      list[index]['profitArticle'] =  parseFloat(list[index].coutMeteaux);
+      list[index]['prixTotal'] = parseFloat(list[index].prixArticle) ;
       formData(list);
-    }else {
+    } else {
       formData(list);
     }
   };
@@ -51,23 +51,23 @@ function AddOrder() {
     e.preventDefault();
 
     if (form.length === 0) {
-      return alert('Veuillez renseigner au moins un article');
+      return alert('Por favor, ingrese al menos un artículo');
     }
 
-    if (form.find((form) => form.typesMetaux === '')) {
-      return alert('Veuillez renseigner tous les champs');
+    if (form.find((form) => form.typesMetaux == '')) {
+      return alert('Por favor, complete todos los campos');
     }
 
-    if (form.find((form) => form.prixArticle === 0)) {
-      return alert('Veuillez renseigner tous les champs');
+    if (form.find((form) => form.prixArticle == 0)) {
+      return alert('Por favor, complete todos los campos');
     }
 
-    if (form.find((form) => form.coutMeteaux === 0)) {
-      return alert('Veuillez renseigner tous les champs');
+    if (form.find((form) => form.coutMeteaux == 0)) {
+      return alert('Por favor, complete todos los campos');
     }
 
-    if (form.find((form) => form.poids === 0)) {
-      return alert('Veuillez renseigner tous les champs');
+    if (form.find((form) => form.poids == 0)) {
+      return alert('Por favor, complete todos los campos');
     }
 
     if (
@@ -75,7 +75,7 @@ function AddOrder() {
         (form) => parseFloat(form.prixArticle) < parseFloat(form.coutMeteaux),
       )
     ) {
-      return alert('Prix Article doit être supérieur au Cout Métaux');
+      return alert('El precio del artículo debe ser mayor que el costo de los metales');
     }
 
     const commandeData = {
@@ -96,7 +96,7 @@ function AddOrder() {
       await axios
         .post('http://localhost:8080/articlesCommande/all', data)
         .then((res) => {
-          alert('Commande crée avec succès');
+          alert('Pedido creado con éxito');
           navigate('/orders');
         })
         .catch((err) => {
@@ -124,13 +124,11 @@ function AddOrder() {
                           >
                             <thead>
                               <tr>
-                                <th>Type Meteaux</th>
-                                <th>Prix Article</th>
-                                <th>Cout Meteaux</th>
-                                <th>Poids/g</th>
-                                <th>Prix Total</th>
-                                <th>Profit Article</th>
-                                <th>Action</th>
+                                <th>Tipo de Metales</th>
+                                <th>Precio del Artículo</th>
+                                <th>Costo de Metales</th>
+                                <th>Peso/g</th>
+                                <th>Acción</th>
                               </tr>
                             </thead>
 
@@ -144,7 +142,7 @@ function AddOrder() {
                                       className="form-control"
                                       onChange={(e) => handleChange(e, index)}
                                     >
-                                      <option value="">Choisir un type</option>
+                                      <option value="">Elegir un tipo</option>
                                       {typesMetaux.length > 0 &&
                                         typesMetaux.map((typesMetaux) => (
                                           <option
@@ -191,32 +189,8 @@ function AddOrder() {
                                       }}
                                     />
                                   </td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      name="prixTotal"
-                                      id="prixTotal"
-                                      className="form-control"
-                                      value={value.prixArticle * value.poids}
-                                      disabled
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      name="profitArticle"
-                                      id="profitArticle"
-                                      className="form-control"
-                                      style={{
-                                        color:
-                                          value.profitArticle < 0
-                                            ? 'red'
-                                            : 'green',
-                                      }}
-                                      value={value.profitArticle}
-                                      disabled
-                                    />
-                                  </td>
+                                  
+                                 
                                   <td>
                                     <button
                                       type="button"
@@ -227,13 +201,13 @@ function AddOrder() {
                                         formData(list);
                                       }}
                                     >
-                                      Supprimer
+                                      Eliminar
                                     </button>
                                   </td>
                                 </tr>
                               ))}
                               <tr>
-                                <td colSpan="5"></td>
+                                <td colSpan="3"></td>
                                 <td className="text-right">
                                   <strong>Total</strong>
                                 </td>
@@ -245,7 +219,7 @@ function AddOrder() {
                                 </td>
                               </tr>
                               <tr>
-                                <td colSpan="5"></td>
+                                <td colSpan="4"></td>
                                 <td colSpan="2">
                                   <select
                                     name="statut"
@@ -269,13 +243,13 @@ function AddOrder() {
                                       value="confirmed"
                                       style={{ color: 'green' }}
                                     >
-                                      Confirmé
+                                      Confirmado
                                     </option>
                                     <option
                                       value="pending"
                                       style={{ color: 'orange' }}
                                     >
-                                      En cours
+                                      En curso
                                     </option>
                                   </select>
                                 </td>
@@ -314,14 +288,14 @@ function AddOrder() {
                       ])
                     }
                   >
-                    Ajouter une article
+                    Añadir un artículo
                   </button>
                   <button
                     type="submit"
                     className="btn btn-primary"
                     onClick={(e) => handleSubmit(e)}
                   >
-                    Soumettre
+                    Enviar
                   </button>
 
                   <button
@@ -332,7 +306,7 @@ function AddOrder() {
                     }}
                     className="btn btn-danger"
                   >
-                    Annuler
+                    Cancelar
                   </button>
                 </div>
               </form>

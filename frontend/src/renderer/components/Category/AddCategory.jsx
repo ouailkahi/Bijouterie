@@ -4,34 +4,33 @@ import { createTypesMetaux } from "../../redux/typesMetauxSlice";
 
 export default function AddCategory({ typesMetaux }) {
   const dispatch = useDispatch();
-
-  const [nom,setNom] = useState("");
+  const [nom, setNom] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(nom.trim() === ""){
-      return alert("Veuillez renseigner le nom");
+    if (nom.trim() === "") {
+      return alert("Por favor, ingrese el nombre");
     }
-    if(typesMetaux.find((typesMetaux) => typesMetaux.nom === nom)){
-      return alert("Ce type existe déja");
+    if (typesMetaux.find((type) => type.nom === nom)) {
+      return alert("Este tipo ya existe");
     }
 
     dispatch(createTypesMetaux({ nom }));
-
     setNom("");
   };
+
   return (
     <React.Fragment>
       <div className="col-xl-4 col-lg-12">
         <div className="ec-cat-list card card-default mb-24px">
           <div className="card-body" style={{ boxShadow: 'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px' }}>
             <div className="ec-cat-form" style={{ color: 'black' }}>
-              <h4>Ajouter une nouvelle Type</h4>
+              <h4>Agregar un nuevo Tipo</h4>
 
               <form onSubmit={(e) => handleSubmit(e)}>
                 <div className="form-group row">
                   <label htmlFor="text" className="col-12 col-form-label" style={{ color: 'black' }}>
-                    Nom Type*
+                    Nombre del Tipo*
                   </label>
                   <div className="col-12">
                     <input
@@ -51,7 +50,7 @@ export default function AddCategory({ typesMetaux }) {
                       type="submit"
                       className="btn btn-primary"
                     >
-                      Soumettre
+                      Enviar
                     </button>
                   </div>
                 </div>

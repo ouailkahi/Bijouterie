@@ -3,31 +3,30 @@ import { Link, useLocation } from 'react-router-dom';
 
 const navbar = [
     {
-        title: "Tableau de bord",
+        title: "Panel",
         href: "/",
         icon: "mdi mdi-view-dashboard-outline",
-
         subMenu: []
     },
 
     {
-        title: "Catégories",
+        title: "Categorías",
         href: "/categories",
         icon: "mdi mdi-bookmark",
         subMenu: []
     },
 
     {
-        title: "Commandes",
+        title: "Pedidos",
         href: null,
         icon: "mdi mdi-cart",
         subMenu: [
             {
-                title: "Commandes",
+                title: "Pedidos",
                 href: "/orders",
             },
             {
-                title: "Ajouter une commande",
+                title: "Agregar un pedido",
                 href: "/orders/add",
             }
         ]
@@ -42,7 +41,7 @@ export default function NavBar({ sidebarOut, handleSideBar }) {
 
     useEffect(() => {
         setUrl(location.pathname);
-        setSubExpand(null); // Ferme tous les sous-menus lorsque la localisation change
+        setSubExpand(null); // Close all sub-menus when the location changes
     }, [location.pathname]);
 
     const handleSectionClick = (index) => {
@@ -68,7 +67,7 @@ export default function NavBar({ sidebarOut, handleSideBar }) {
                             e.preventDefault();
                             toggleSidebar();
                         }}>
-                            <span className="ec-brand-name text-truncate" style={{ color: "BLACK", fontWeight: 'bold', fontFamily: 'serif',fontSize:'25px' }}>BIJOUTERIE </span>
+                            <span className="ec-brand-name text-truncate" style={{ color: "BLACK", fontWeight: 'bold', fontFamily: 'serif', fontSize: '40px' }}>Fawaz</span>
                         </Link>
                     </div>
                     <div className="ec-navigation" data-simplebar>
@@ -91,8 +90,7 @@ export default function NavBar({ sidebarOut, handleSideBar }) {
                                         }}
                                     >
                                         <i className={item.icon} style={{ color: "black" }}></i>             
-                                                                   <span className="nav-text" style={{ color: "BLACK", fontWeight: 'bold' }}>{item.title}</span>
-
+                                        <span className="nav-text" style={{ color: "BLACK", fontWeight: 'bold' }}>{item.title}</span>
                                     </Link>
                                     {item.subMenu.length > 0 && (
                                         <div className={subExpand === index ? "collapse show" : "collapse"}>

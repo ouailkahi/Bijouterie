@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllCommandes } from "../redux/commandeSlice";
-import Pagination from "./Pagination"; // Import the custom Pagination component
+import Pagination from "./Pagination"; // Importa el componente de paginación personalizado
 import { useNavigate } from "react-router";
 
 export default function AllOrders() {
@@ -47,11 +47,11 @@ export default function AllOrders() {
                       <thead>
                         <tr>
                           <th>ID</th>
-                          <th>Date Commande</th>
-                          <th>Prix Total</th>
-                          <th>Profit Total</th>
-                          <th>Status</th>
-                          <th>Action</th>
+                          <th>Fecha del Pedido</th>
+                          <th>Precio Total</th>
+                          <th>Beneficio Total</th>
+                          <th>Estado</th>
+                          <th>Acción</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -69,7 +69,7 @@ export default function AllOrders() {
                                 window.scrollTo(0, 0);
                                 navigate(`/orders/${commande.id}`)
                                 }}>
-                                Details
+                                Detalles
                               </button>
                             </td>
                           </tr>

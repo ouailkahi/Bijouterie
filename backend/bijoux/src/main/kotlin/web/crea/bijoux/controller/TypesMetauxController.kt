@@ -3,6 +3,7 @@ package web.crea.bijoux.controller
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import web.crea.bijoux.dto.TotalWeightDto
 import web.crea.bijoux.entity.TypeMetaux
 import web.crea.bijoux.service.TypesMetauxService
 
@@ -24,4 +25,9 @@ class TypesMetauxController(private val service: TypesMetauxService) {
 
     @DeleteMapping("/{id}")
     fun deleteTypesMetaux(@PathVariable id: Long): Mono<Void> = service.deleteTypesMetaux(id)
+
+    @GetMapping("/total-weight")
+    fun getTotalWeightPerMetal(): Flux<TotalWeightDto> {
+        return service.getTotalWeightPerMetal()
+    }
 }

@@ -46,8 +46,19 @@ class CommandesController(private val service: CommandesService) {
         return service.getTotalProfitPerMonth()
     }
 
+
+    @GetMapping("/total/months")
+    fun getTotalProfitPerMonths(): Flux<ProfitPerMonth> {
+        return service.getTotalProfitPerMonths()
+    }
+
     @GetMapping("/total/daily")
     fun getTotalProfitPerDay(): Flux<DailyProfitDTO> {
         return service.getTotalProfitPerDay()
+    }
+
+    @GetMapping("/total/days")
+    fun getTotalProfitPerDays(): Flux<DailyProfitDTO> {
+        return service.getTotalProfitPerDays()
     }
 }

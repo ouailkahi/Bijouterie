@@ -3,6 +3,7 @@ package web.crea.bijoux.service
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import web.crea.bijoux.dto.TotalWeightDto
 import web.crea.bijoux.entity.TypeMetaux
 import web.crea.bijoux.repository.TypesMetauxRepository
 
@@ -24,4 +25,10 @@ class TypesMetauxService(private val repository: TypesMetauxRepository) {
     }
 
     fun deleteTypesMetaux(id: Long): Mono<Void> = repository.deleteById(id)
+
+    fun getTotalWeightPerMetal(): Flux<TotalWeightDto> {
+        return repository.getTotalWeightPerMetal()
+    }
 }
+
+

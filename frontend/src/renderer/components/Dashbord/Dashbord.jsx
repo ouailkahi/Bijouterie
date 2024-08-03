@@ -3,6 +3,7 @@ import CircleChart from "./CircleChart";
 import GraphChart from "./GraphChart";
 import Statistics from "./Statistics";
 import axios from "axios";
+import GraphChartM from "./GraphChartM";
 
 export default function Dashbord() {
     const [totalMonthly, setTotalMonthly] = useState([]);
@@ -36,7 +37,11 @@ export default function Dashbord() {
             <div className="content" style={{ background: '#14141403' }}>
                 <Statistics totalMonthly={totalMonthly} totalDaily={totalDaily} />
                 <GraphChart />
+                <div className="row">
                 <CircleChart />
+                <GraphChartM/>
+                </div>
+               
             </div>
         </React.Fragment>
     )

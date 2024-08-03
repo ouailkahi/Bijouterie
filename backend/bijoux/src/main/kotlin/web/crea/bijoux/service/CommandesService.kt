@@ -65,6 +65,14 @@ class CommandesService(private val repository: CommandesRepository, private val 
         return repository.findTotalProfitPerDay()
     }
 
+    fun getTotalProfitPerDays(): Flux<DailyProfitDTO> {
+        return repository.findTotalProfitPerDays()
+    }
+
+    fun getTotalProfitPerMonths(): Flux<ProfitPerMonth> {
+        return repository.findTotalProfitPerMonths()
+    }
+
 
 }
 

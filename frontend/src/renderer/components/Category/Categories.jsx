@@ -24,16 +24,8 @@ export default function Categories() {
       <div className="ec-content-wrapper">
         <div className="content">
           <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-            <h1 style={{color:"black"}}>Categorie</h1>
-            <p className="breadcrumbs">
-              <span>
-                
-              </span>
-              <span>
-                <i className="mdi mdi-chevron-right"></i>
-              </span>
-              Categories
-            </p>
+            <h1 style={{color:"black"}}>Tipo</h1>
+           
           </div>
           <div className="row">
             <AddCategory typesMetaux={typesMetaux} />
