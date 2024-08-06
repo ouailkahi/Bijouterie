@@ -29,7 +29,6 @@ function AddOrder() {
       prixArticle: 0,
       poids: 0,
       profitArticle: 0,
-      coutMeteaux: 0,
       prixTotal: 0,
     },
   ]);
@@ -38,13 +37,8 @@ function AddOrder() {
     const { name, value } = e.target;
     const list = [...form];
     list[index][name] = value;
-    if (name === 'prixArticle' || name === 'coutMeteaux' || name === 'poids') {
-      list[index]['profitArticle'] =  parseFloat(list[index].coutMeteaux);
-      list[index]['prixTotal'] = parseFloat(list[index].prixArticle) ;
-      formData(list);
-    } else {
-      formData(list);
-    }
+
+    formData(list);
   };
 
   const handleSubmit = (e) => {
@@ -62,7 +56,7 @@ function AddOrder() {
       return alert('Por favor, complete todos los campos');
     }
 
-    if (form.find((form) => form.coutMeteaux == 0)) {
+    if (form.find((form) => form.profitArticle == 0)) {
       return alert('Por favor, complete todos los campos');
     }
 
@@ -72,7 +66,7 @@ function AddOrder() {
 
     if (
       form.find(
-        (form) => parseFloat(form.prixArticle) < parseFloat(form.coutMeteaux),
+        (form) => parseFloat(form.prixArticle) < parseFloat(form.profitArticle),
       )
     ) {
       return alert('El precio del artículo debe ser mayor que el costo de los metales');
@@ -80,9 +74,12 @@ function AddOrder() {
 
     const commandeData = {
       ...commande,
-      prixTotal: form.reduce((acc, form) => acc + form.prixTotal, 0),
-      profitTotal: form.reduce((acc, form) => acc + form.profitArticle, 0),
+      prixTotal: parseFloat(form.reduce((acc, form) => acc + form.prixArticle, 0)),
+      profitTotal: parseFloat(form.reduce((acc, form) => acc + form.profitArticle, 0)),
     };
+
+    console.log(commandeData);
+    
 
     dispatch(createCommandes(commandeData)).then(async (res) => {
       const commandeId = res.payload.id;
@@ -97,6 +94,15 @@ function AddOrder() {
         .post('http://localhost:8080/articlesCommande/all', data)
         .then((res) => {
           alert('Pedido creado con éxito');
+          formData([
+            {
+              typesMetaux: '',
+              prixArticle: 0,
+              poids: 0,
+              profitArticle: 0,
+              prixTotal: 0,
+            },
+          ])
           navigate('/orders');
         })
         .catch((err) => {
@@ -126,7 +132,7 @@ function AddOrder() {
                               <tr>
                                 <th>Tipo de Metales</th>
                                 <th>Precio del Artículo</th>
-                                <th>Costo de Metales</th>
+                                <th>Beneficio</th>
                                 <th>Peso/g</th>
                                 <th>Acción</th>
                               </tr>
@@ -159,18 +165,16 @@ function AddOrder() {
                                       type="number"
                                       name="prixArticle"
                                       id="prixArticle"
-                                      className="form-control"
-                                      value={value.prixArticle}
+                                      className=""
                                       onChange={(e) => handleChange(e, index)}
                                     />
                                   </td>
                                   <td>
                                     <input
                                       type="number"
-                                      name="coutMeteaux"
-                                      id="coutMeteaux"
-                                      className="form-control"
-                                      value={value.coutMeteaux}
+                                      name="profitArticle"
+                                      id="profitArticle"
+                                      className=""
                                       onChange={(e) => {
                                         handleChange(e, index);
                                       }}
@@ -182,8 +186,7 @@ function AddOrder() {
                                       name="poids"
                                       id="poids"
                                       min={0}
-                                      className="form-control"
-                                      value={value.poids}
+                                      className=""
                                       onChange={(e) => {
                                         handleChange(e, index);
                                       }}
@@ -213,7 +216,7 @@ function AddOrder() {
                                 </td>
                                 <td className="text-right">
                                   <strong>
-                                    {form.reduce((a, b) => a + b.prixTotal, 0)}
+                                    {form.reduce((a, b) => a + b.prixArticle, 0)}
                                     Dh
                                   </strong>
                                 </td>
@@ -280,9 +283,8 @@ function AddOrder() {
                         {
                           typesMetaux: '',
                           prixArticle: 0,
-                          coutMeteaux: 0,
-                          poids: 0,
                           profitArticle: 0,
+                          poids: 0,
                           prixTotal: 0,
                         },
                       ])

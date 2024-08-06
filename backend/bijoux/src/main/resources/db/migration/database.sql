@@ -134,7 +134,7 @@ BEGIN
     -- Update the prix_total and profit_total for the commande
     UPDATE Commandes
     SET prix_total = (
-        SELECT COALESCE(SUM(prix_article * poids), 0)
+        SELECT COALESCE(SUM(prix_article ), 0)
         FROM ArticlesCommande
         WHERE commande_id = NEW.commande_id
     ),
