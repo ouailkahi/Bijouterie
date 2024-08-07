@@ -41,13 +41,9 @@ export default function CategoriesTable({ typesMetaux }) {
                             style={{ cursor: 'pointer' }}
                             onClick={(e) => {
                               e.preventDefault();
-                              if (
-                                window.confirm(
-                                  '¿Desea eliminar este tipo?',
-                                )
-                              ) {
+                               
                                 dispatch(deleteTypesMetaux(type.id));
-                              }
+                              
                             }}
                           >
                             Eliminar
